@@ -10,9 +10,7 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
-    // Ürün koduna (product_code) göre veritabanında arama yapan efsane metod
     Optional<ProductEntity> findByProductCode(String productCode);
 
-    // Sadece aktif ürünleri getiren listeleme metodu
     List<ProductEntity> findAllByIsActiveTrue();
 }

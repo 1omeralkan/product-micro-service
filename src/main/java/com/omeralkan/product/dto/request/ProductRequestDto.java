@@ -15,6 +15,5 @@ public class ProductRequestDto {
     private String productCode;
     private String name;
     private String description;
-    // Kullanıcı ürünü eklerken "Bu ürün şu kategori ID'lerine ait" diyecek
     private Set<Long> categoryIds;
 }

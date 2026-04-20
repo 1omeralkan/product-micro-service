@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController // Spring Boot'a "Burası dışarıya açılan bir API gişesidir" diyoruz
-@RequestMapping("/api/v1/categories") // Sektör standardı URL yapısı (Kaan abi bunu sever)
+@RestController
+@RequestMapping("/api/v1/categories")
 @RequiredArgsConstructor
 public class CategoryController {
 
@@ -19,7 +19,7 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CategoryResponseDto> createCategory(@RequestBody CategoryRequestDto requestDto) {
-        // Kayıt başarılıysa 201 CREATED durum koduyla döneriz (Tam kurumsal hareket)
+
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(requestDto));
     }
 
@@ -41,7 +41,6 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
-        // Silme işlemi (Soft delete) başarılıysa 204 NO CONTENT döneriz
         return ResponseEntity.noContent().build();
     }
 }

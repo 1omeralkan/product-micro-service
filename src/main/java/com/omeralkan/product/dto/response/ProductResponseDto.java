@@ -17,6 +17,5 @@ public class ProductResponseDto {
     private String name;
     private String description;
     private Boolean isActive;
-    // Ürünü çekerken o ürünün bağlı olduğu kategorilerin detaylarını da döneceğiz
     private Set<CategoryResponseDto> categories;
 }

@@ -3,9 +3,12 @@ package com.omeralkan.product.service.impl;
 import com.omeralkan.product.dto.request.CategoryRequestDto;
 import com.omeralkan.product.dto.response.CategoryResponseDto;
 import com.omeralkan.product.entity.CategoryEntity;
+import com.omeralkan.product.exception.BusinessException;
+import com.omeralkan.product.mapper.CategoryMapper;
 import com.omeralkan.product.repository.CategoryRepository;
 import com.omeralkan.product.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,62 +18,49 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
-    // SONARQUBE ÇÖZÜMÜ 1: Sabit mesajı en tepeye tanımladık
-    private static final String CATEGORY_NOT_FOUND_MSG = "Kategori bulunamadı. ID: ";
+    private static final String ERROR_CATEGORY_NOT_FOUND = "PROD-CAT-404";
 
     @Override
     public CategoryResponseDto createCategory(CategoryRequestDto requestDto) {
-        CategoryEntity entity = new CategoryEntity();
-        entity.setName(requestDto.getName());
-        entity.setDescription(requestDto.getDescription());
-
+        CategoryEntity entity = categoryMapper.toEntity(requestDto);
         CategoryEntity savedEntity = categoryRepository.save(entity);
-        return mapToResponse(savedEntity);
+        return categoryMapper.toResponse(savedEntity);
     }
 
     @Override
     public CategoryResponseDto getCategoryById(Long id) {
-        CategoryEntity entity = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(CATEGORY_NOT_FOUND_MSG + id)); // Sabit değişkeni kullandık
-        return mapToResponse(entity);
+        CategoryEntity entity = findActiveByIdOrThrow(id);
+        return categoryMapper.toResponse(entity);
     }
 
     @Override
     public List<CategoryResponseDto> getAllCategories() {
         return categoryRepository.findAllByIsActiveTrue()
                 .stream()
-                .map(this::mapToResponse)
-                .toList(); // SONARQUBE ÇÖZÜMÜ 2: Yeni nesil toList() kullandık
+                .map(categoryMapper::toResponse)
+                .toList();
     }
 
     @Override
     public CategoryResponseDto updateCategory(Long id, CategoryRequestDto requestDto) {
-        CategoryEntity entity = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(CATEGORY_NOT_FOUND_MSG + id)); // Sabit değişkeni kullandık
-
-        entity.setName(requestDto.getName());
-        entity.setDescription(requestDto.getDescription());
-
+        CategoryEntity entity = findActiveByIdOrThrow(id);
+        categoryMapper.updateEntityFromDto(requestDto, entity);
         CategoryEntity updatedEntity = categoryRepository.save(entity);
-        return mapToResponse(updatedEntity);
+        return categoryMapper.toResponse(updatedEntity);
     }
 
     @Override
     public void deleteCategory(Long id) {
-        CategoryEntity entity = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(CATEGORY_NOT_FOUND_MSG + id)); // Sabit değişkeni kullandık
-
+        CategoryEntity entity = findActiveByIdOrThrow(id);
         entity.setIsActive(false);
         categoryRepository.save(entity);
     }
 
-    private CategoryResponseDto mapToResponse(CategoryEntity entity) {
-        CategoryResponseDto responseDto = new CategoryResponseDto();
-        responseDto.setId(entity.getId());
-        responseDto.setName(entity.getName());
-        responseDto.setDescription(entity.getDescription());
-        responseDto.setIsActive(entity.getIsActive());
-        return responseDto;
+    private CategoryEntity findActiveByIdOrThrow(Long id) {
+        return categoryRepository.findById(id)
+                .filter(CategoryEntity::getIsActive)
+                .orElseThrow(() -> new BusinessException(ERROR_CATEGORY_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
 }

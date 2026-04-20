@@ -10,14 +10,13 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@MappedSuperclass // Veritabanında ayrı tablo olmaz, diğerlerine kolonlarını miras verir
+@MappedSuperclass
 public abstract class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Senin vizyoner Optimistic Locking alanın!
     @Version
     private Long version;
 

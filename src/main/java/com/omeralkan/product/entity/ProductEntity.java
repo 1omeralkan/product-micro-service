@@ -26,7 +26,6 @@ public class ProductEntity extends BaseEntity {
     @Column(name = "description")
     private String description;
 
-    // Many-to-Many ilişkinin aktif tarafı (Mapping tablosunu burada belirtiyoruz)
     @ManyToMany
     @JoinTable(
             name = "product_category_mapping",
