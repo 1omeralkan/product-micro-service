@@ -6,4 +6,5 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
     <include file="001-create-catalog-tables.xml" relativeToChangelogFile="true"/>
+    <include file="db/changelog/002-create-product-amounts-table.xml"/>
 </databaseChangeLog>
