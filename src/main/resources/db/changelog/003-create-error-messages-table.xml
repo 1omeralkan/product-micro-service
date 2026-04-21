@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <!-- Tablo oluşturma -->
+    <changeSet id="003-1" author="omeralkan">
+        <createTable tableName="error_messages">
+            <column name="error_code" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="language" type="VARCHAR(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="updated_by" type="VARCHAR(50)"/>
+        </createTable>
+
+        <addPrimaryKey
+                tableName="error_messages"
+                columnNames="error_code, language"
+                constraintName="pk_error_messages"/>
+    </changeSet>
+
+    <!-- Hata mesajlarını yükle -->
+    <changeSet id="003-2" author="omeralkan">
+        <!-- PROD-404: Ürün bulunamadı -->
+        <insert tableName="error_messages">
+            <column name="error_code" value="PROD-404"/>
+            <column name="language" value="tr"/>
+            <column name="message" value="Aradığınız ürün sistemde bulunamadı veya silinmiş olabilir."/>
+            <column name="created_at" valueDate="NOW()"/>
+            <column name="created_by" value="system"/>
+        </insert>
+        <insert tableName="error_messages">
+            <column name="error_code" value="PROD-404"/>
+            <column name="language" value="en"/>
+            <column name="message" value="The requested product was not found or may have been deleted."/>
+            <column name="created_at" valueDate="NOW()"/>
+            <column name="created_by" value="system"/>
+        </insert>
+
+        <!-- PROD-CAT-404: Kategori bulunamadı -->
+        <insert tableName="error_messages">
+            <column name="error_code" value="PROD-CAT-404"/>
+            <column name="language" value="tr"/>
+            <column name="message" value="Aradığınız kategori sistemde bulunamadı veya silinmiş olabilir."/>
+            <column name="created_at" valueDate="NOW()"/>
+            <column name="created_by" value="system"/>
+        </insert>
+        <insert tableName="error_messages">
+            <column name="error_code" value="PROD-CAT-404"/>
+            <column name="language" value="en"/>
+            <column name="message" value="The requested category was not found or may have been deleted."/>
+            <column name="created_at" valueDate="NOW()"/>
+            <column name="created_by" value="system"/>
+        </insert>
+
+        <!-- PROD-AMT-404: Fiyat kaydı bulunamadı -->
+        <insert tableName="error_messages">
+            <column name="error_code" value="PROD-AMT-404"/>
+            <column name="language" value="tr"/>
+            <column name="message" value="Aradığınız fiyat kaydı sistemde bulunamadı veya silinmiş olabilir."/>
+            <column name="created_at" valueDate="NOW()"/>
+            <column name="created_by" value="system"/>
+        </insert>
+        <insert tableName="error_messages">
+            <column name="error_code" value="PROD-AMT-404"/>
+            <column name="language" value="en"/>
+            <column name="message" value="The requested price record was not found or may have been deleted."/>
+            <column name="created_at" valueDate="NOW()"/>
+            <column name="created_by" value="system"/>
+        </insert>
+
+        <!-- PROD-AMT-ACT-404: Aktif fiyat bulunamadı -->
+        <insert tableName="error_messages">
+            <column name="error_code" value="PROD-AMT-ACT-404"/>
+            <column name="language" value="tr"/>
+            <column name="message" value="Bu ürün için aktif bir fiyat kaydı bulunamadı."/>
+            <column name="created_at" valueDate="NOW()"/>
+            <column name="created_by" value="system"/>
+        </insert>
+        <insert tableName="error_messages">
+            <column name="error_code" value="PROD-AMT-ACT-404"/>
+            <column name="language" value="en"/>
+            <column name="message" value="No active price record found for this product."/>
+            <column name="created_at" valueDate="NOW()"/>
+            <column name="created_by" value="system"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

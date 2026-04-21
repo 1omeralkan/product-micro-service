@@ -7,4 +7,5 @@
 
     <include file="001-create-catalog-tables.xml" relativeToChangelogFile="true"/>
     <include file="db/changelog/002-create-product-amounts-table.xml"/>
+    <include file="db/changelog/003-create-error-messages-table.xml"/>
 </databaseChangeLog>
