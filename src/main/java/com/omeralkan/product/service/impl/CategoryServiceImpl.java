@@ -4,6 +4,7 @@ import com.omeralkan.product.dto.request.CategoryRequestDto;
 import com.omeralkan.product.dto.response.CategoryResponseDto;
 import com.omeralkan.product.entity.CategoryEntity;
 import com.omeralkan.product.exception.BusinessException;
+import com.omeralkan.product.exception.ErrorCodes;
 import com.omeralkan.product.mapper.CategoryMapper;
 import com.omeralkan.product.repository.CategoryRepository;
 import com.omeralkan.product.service.CategoryService;
@@ -20,7 +21,6 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
-    private static final String ERROR_CATEGORY_NOT_FOUND = "PROD-CAT-404";
 
     @Override
     public CategoryResponseDto createCategory(CategoryRequestDto requestDto) {
@@ -61,6 +61,6 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryEntity findActiveByIdOrThrow(Long id) {
         return categoryRepository.findById(id)
                 .filter(CategoryEntity::getIsActive)
-                .orElseThrow(() -> new BusinessException(ERROR_CATEGORY_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCodes.CATEGORY_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
 }

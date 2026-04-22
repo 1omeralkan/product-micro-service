@@ -3,6 +3,7 @@ package com.omeralkan.product.controller;
 import com.omeralkan.product.dto.request.ProductAmountRequestDto;
 import com.omeralkan.product.dto.response.ProductAmountResponseDto;
 import com.omeralkan.product.service.ProductAmountService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class ProductAmountController {
 
     @PostMapping
     public ResponseEntity<ProductAmountResponseDto> createProductAmount(
-            @RequestBody ProductAmountRequestDto requestDto) {
+            @Valid @RequestBody ProductAmountRequestDto requestDto) {
 
         ProductAmountResponseDto response = productAmountService.createProductAmount(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

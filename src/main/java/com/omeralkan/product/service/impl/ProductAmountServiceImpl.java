@@ -5,6 +5,7 @@ import com.omeralkan.product.dto.response.ProductAmountResponseDto;
 import com.omeralkan.product.entity.ProductAmountEntity;
 import com.omeralkan.product.entity.ProductEntity;
 import com.omeralkan.product.exception.BusinessException;
+import com.omeralkan.product.exception.ErrorCodes;
 import com.omeralkan.product.mapper.ProductAmountMapper;
 import com.omeralkan.product.repository.ProductAmountRepository;
 import com.omeralkan.product.repository.ProductRepository;
@@ -27,20 +28,14 @@ public class ProductAmountServiceImpl implements ProductAmountService {
     private final ProductRepository productRepository;
     private final ProductAmountMapper productAmountMapper;
 
-    private static final String ERROR_PRODUCT_NOT_FOUND = "PROD-404";
-    private static final String ERROR_AMOUNT_NOT_FOUND = "PROD-AMT-404";
-    private static final String ERROR_ACTIVE_AMOUNT_NOT_FOUND = "PROD-AMT-ACT-404";
 
     @Override
     @Transactional
     public ProductAmountResponseDto createProductAmount(ProductAmountRequestDto requestDto) {
-        // 1. Ürün var mı kontrol et
         ProductEntity product = findActiveProductOrThrow(requestDto.getProductId());
 
-        // 2. Bu ürünün zaten aktif fiyatı var mı?
         closeActiveAmountIfExists(product.getId(), requestDto.getEffectiveDate());
 
-        // 3. Yeni fiyat kaydını oluştur
         ProductAmountEntity entity = productAmountMapper.toEntity(requestDto, product);
         ProductAmountEntity savedEntity = productAmountRepository.save(entity);
 
@@ -66,7 +61,6 @@ public class ProductAmountServiceImpl implements ProductAmountService {
 
     @Override
     public List<ProductAmountResponseDto> getProductAmountsByProductId(Long productId) {
-        // Önce ürün var mı kontrol et
         findActiveProductOrThrow(productId);
 
         return productAmountRepository.findAllByProductIdAndIsActiveTrue(productId)
@@ -81,7 +75,7 @@ public class ProductAmountServiceImpl implements ProductAmountService {
 
         ProductAmountEntity entity = productAmountRepository
                 .findByProductIdAndExpiryDateIsNullAndIsActiveTrue(productId)
-                .orElseThrow(() -> new BusinessException(ERROR_ACTIVE_AMOUNT_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCodes.ACTIVE_AMOUNT_NOT_FOUND, HttpStatus.NOT_FOUND));
 
         return productAmountMapper.toResponse(entity);
     }
@@ -95,18 +89,16 @@ public class ProductAmountServiceImpl implements ProductAmountService {
         log.info("Fiyat kaydı silindi. ID: {}", id);
     }
 
-    // === PRIVATE HELPER METODLAR ===
-
     private ProductEntity findActiveProductOrThrow(Long productId) {
         return productRepository.findById(productId)
                 .filter(ProductEntity::getIsActive)
-                .orElseThrow(() -> new BusinessException(ERROR_PRODUCT_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCodes.PRODUCT_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
 
     private ProductAmountEntity findActiveAmountOrThrow(Long id) {
         return productAmountRepository.findById(id)
                 .filter(ProductAmountEntity::getIsActive)
-                .orElseThrow(() -> new BusinessException(ERROR_AMOUNT_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCodes.AMOUNT_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
 
     private void closeActiveAmountIfExists(Long productId, LocalDate newEffectiveDate) {

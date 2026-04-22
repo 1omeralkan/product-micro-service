@@ -3,6 +3,7 @@ package com.omeralkan.product.controller;
 import com.omeralkan.product.dto.request.ProductRequestDto;
 import com.omeralkan.product.dto.response.ProductResponseDto;
 import com.omeralkan.product.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody ProductRequestDto requestDto) {
+    public ResponseEntity<ProductResponseDto> createProduct(@Valid @RequestBody ProductRequestDto requestDto) { // @Valid eklendi
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(requestDto));
     }
 
@@ -33,7 +34,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Long id, @RequestBody ProductRequestDto requestDto) {
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequestDto requestDto) { // @Valid eklendi
         return ResponseEntity.ok(productService.updateProduct(id, requestDto));
     }
 

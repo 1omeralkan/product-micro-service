@@ -5,6 +5,7 @@ import com.omeralkan.product.dto.response.ProductResponseDto;
 import com.omeralkan.product.entity.CategoryEntity;
 import com.omeralkan.product.entity.ProductEntity;
 import com.omeralkan.product.exception.BusinessException;
+import com.omeralkan.product.exception.ErrorCodes;
 import com.omeralkan.product.mapper.ProductMapper;
 import com.omeralkan.product.repository.CategoryRepository;
 import com.omeralkan.product.repository.ProductRepository;
@@ -25,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
 
-    private static final String ERROR_PRODUCT_NOT_FOUND = "PROD-404";
+
 
     @Override
     public ProductResponseDto createProduct(ProductRequestDto requestDto) {
@@ -68,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductEntity findActiveByIdOrThrow(Long id) {
         return productRepository.findById(id)
                 .filter(ProductEntity::getIsActive)
-                .orElseThrow(() -> new BusinessException(ERROR_PRODUCT_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCodes.PRODUCT_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
 
     private void assignCategories(ProductEntity entity, Set<Long> categoryIds) {

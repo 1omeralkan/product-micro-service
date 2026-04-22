@@ -3,6 +3,7 @@ package com.omeralkan.product.controller;
 import com.omeralkan.product.dto.request.CategoryRequestDto;
 import com.omeralkan.product.dto.response.CategoryResponseDto;
 import com.omeralkan.product.service.CategoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<CategoryResponseDto> createCategory(@RequestBody CategoryRequestDto requestDto) {
-
+    public ResponseEntity<CategoryResponseDto> createCategory(@Valid @RequestBody CategoryRequestDto requestDto) { // @Valid eklendi
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(requestDto));
     }
 
@@ -34,7 +34,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponseDto> updateCategory(@PathVariable Long id, @RequestBody CategoryRequestDto requestDto) {
+    public ResponseEntity<CategoryResponseDto> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequestDto requestDto) { // @Valid eklendi
         return ResponseEntity.ok(categoryService.updateCategory(id, requestDto));
     }
 
