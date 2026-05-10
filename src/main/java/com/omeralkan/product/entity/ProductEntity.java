@@ -38,4 +38,8 @@ public class ProductEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<ProductAmountEntity> productAmounts = new ArrayList<>();
+
+    // Bir ürünün birden fazla teminatı olabilir (One-To-Many ilişkisi)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductCoverageEntity> coverages = new ArrayList<>();
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -18,4 +19,5 @@ public class ProductResponseDto {
     private String description;
     private Boolean isActive;
     private Set<CategoryResponseDto> categories;
+    private List<ProductCoverageResponseDto> coverages;
 }

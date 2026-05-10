@@ -37,7 +37,6 @@ class ProductAmountServiceImplTest {
     @InjectMocks
     private ProductAmountServiceImpl productAmountService;
 
-    // ==================== TEST 1: İLK FİYAT EKLEME ====================
 
     @Test
     void createProductAmount_WhenNoActiveAmount_ShouldCreateSuccessfully() {
@@ -73,7 +72,6 @@ class ProductAmountServiceImplTest {
         verify(productAmountRepository, times(1)).save(any(ProductAmountEntity.class));
     }
 
-    // ==================== TEST 2: ZAM — ESKİ FİYAT KAPATILIR ====================
 
     @Test
     void createProductAmount_WhenActiveAmountExists_ShouldCloseOldAndCreateNew() {
@@ -116,7 +114,6 @@ class ProductAmountServiceImplTest {
         verify(productAmountRepository, times(2)).save(any(ProductAmountEntity.class));
     }
 
-    // ==================== TEST 3: OLMAYAN ÜRÜNE FİYAT EKLEME ====================
 
     @Test
     void createProductAmount_WhenProductNotFound_ShouldThrowBusinessException() {
@@ -133,14 +130,13 @@ class ProductAmountServiceImplTest {
         verify(productAmountRepository, never()).save(any(ProductAmountEntity.class));
     }
 
-    // ==================== TEST 4: SOFT-DELETE EDİLMİŞ ÜRÜNE FİYAT EKLEME ====================
 
     @Test
     void createProductAmount_WhenProductIsSoftDeleted_ShouldThrowBusinessException() {
         ProductEntity product = new ProductEntity();
         product.setId(1L);
         product.setName("iPhone 15");
-        product.setIsActive(false); // Pasif ürün
+        product.setIsActive(false);
 
         ProductAmountRequestDto requestDto = new ProductAmountRequestDto();
         requestDto.setProductId(1L);
@@ -155,7 +151,6 @@ class ProductAmountServiceImplTest {
         verify(productAmountRepository, never()).save(any(ProductAmountEntity.class));
     }
 
-    // ==================== TEST 5: DELETE — SOFT DELETE ====================
 
     @Test
     void deleteProductAmount_ShouldSetIsActiveFalse() {

@@ -31,18 +31,15 @@ class ProductServiceImplTest {
     @Mock
     private CategoryRepository categoryRepository;
 
-    // ESKİDEN YOKTU — Refactor'da ProductMapper ekledik
     @Mock
     private ProductMapper productMapper;
 
     @InjectMocks
     private ProductServiceImpl productService;
 
-    // ==================== CREATE ====================
 
     @Test
     void createProduct_ShouldReturnProductResponseDto_WithCategories() {
-        // GIVEN
         Set<Long> categoryIds = new HashSet<>(List.of(1L));
         ProductRequestDto requestDto = new ProductRequestDto();
         requestDto.setProductCode("TEL-001");
@@ -75,16 +72,13 @@ class ProductServiceImplTest {
         responseDto.setName("iPhone 15");
         responseDto.setCategories(new HashSet<>(List.of(categoryResponseDto)));
 
-        // Mock kuralları
         when(productMapper.toEntity(requestDto)).thenReturn(entity);
         when(categoryRepository.findAllById(anyIterable())).thenReturn(List.of(category));
         when(productRepository.save(any(ProductEntity.class))).thenReturn(savedEntity);
         when(productMapper.toResponse(savedEntity)).thenReturn(responseDto);
 
-        // WHEN
         ProductResponseDto result = productService.createProduct(requestDto);
 
-        // THEN
         assertNotNull(result);
         assertEquals("TEL-001", result.getProductCode());
         assertEquals(1, result.getCategories().size());
@@ -95,16 +89,14 @@ class ProductServiceImplTest {
         verify(productMapper, times(1)).toResponse(savedEntity);
     }
 
-    // ==================== GET BY ID — BAŞARILI ====================
 
     @Test
     void getProductById_WhenProductExists_ShouldReturnProductResponseDto() {
-        // GIVEN
         ProductEntity entity = new ProductEntity();
         entity.setId(1L);
         entity.setProductCode("TEL-001");
         entity.setName("iPhone 15");
-        entity.setIsActive(true); // ÖNEMLİ: filter geçmesi için true olmalı
+        entity.setIsActive(true);
 
         ProductResponseDto responseDto = new ProductResponseDto();
         responseDto.setId(1L);
@@ -113,23 +105,18 @@ class ProductServiceImplTest {
         when(productRepository.findById(1L)).thenReturn(Optional.of(entity));
         when(productMapper.toResponse(entity)).thenReturn(responseDto);
 
-        // WHEN
         ProductResponseDto result = productService.getProductById(1L);
 
-        // THEN
         assertNotNull(result);
         assertEquals("TEL-001", result.getProductCode());
         verify(productRepository, times(1)).findById(1L);
     }
 
-    // ==================== GET BY ID — BULUNAMADI ====================
 
     @Test
     void getProductById_WhenProductDoesNotExist_ShouldThrowBusinessException() {
-        // GIVEN
         when(productRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // WHEN & THEN
         BusinessException exception = assertThrows(BusinessException.class, () -> {
             productService.getProductById(1L);
         });
@@ -137,18 +124,15 @@ class ProductServiceImplTest {
         assertEquals("PROD-404", exception.getMessage());
     }
 
-    // ==================== GET BY ID — SOFT DELETE ====================
 
     @Test
     void getProductById_WhenProductIsSoftDeleted_ShouldThrowBusinessException() {
-        // GIVEN — kayıt var ama pasif
         ProductEntity entity = new ProductEntity();
         entity.setId(1L);
         entity.setIsActive(false);
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(entity));
 
-        // WHEN & THEN — pasif ürün de 404 vermeli
         BusinessException exception = assertThrows(BusinessException.class, () -> {
             productService.getProductById(1L);
         });
@@ -156,11 +140,9 @@ class ProductServiceImplTest {
         assertEquals("PROD-404", exception.getMessage());
     }
 
-    // ==================== DELETE ====================
 
     @Test
     void deleteProduct_ShouldSetIsActiveFalse() {
-        // GIVEN
         ProductEntity entity = new ProductEntity();
         entity.setId(1L);
         entity.setName("iPhone 15");
@@ -169,11 +151,9 @@ class ProductServiceImplTest {
         when(productRepository.findById(1L)).thenReturn(Optional.of(entity));
         when(productRepository.save(any(ProductEntity.class))).thenReturn(entity);
 
-        // WHEN
         productService.deleteProduct(1L);
 
-        // THEN
-        assertFalse(entity.getIsActive());
+            assertFalse(entity.getIsActive());
         verify(productRepository, times(1)).save(entity);
     }
 }

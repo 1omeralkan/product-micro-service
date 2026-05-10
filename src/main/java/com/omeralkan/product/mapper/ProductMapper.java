@@ -2,7 +2,9 @@ package com.omeralkan.product.mapper;
 
 import com.omeralkan.product.dto.request.ProductRequestDto;
 import com.omeralkan.product.dto.response.ProductResponseDto;
+import com.omeralkan.product.dto.response.ProductCoverageResponseDto; // EKLENDİ
 import com.omeralkan.product.entity.ProductEntity;
+import com.omeralkan.product.entity.ProductCoverageEntity; // EKLENDİ
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +32,15 @@ public class ProductMapper {
             );
         }
 
+        // GERÇEK ENTEGRASYON: Teminatların DTO'ya dönüştürülüp listeye eklenmesi
+        if (entity.getCoverages() != null) {
+            dto.setCoverages(
+                    entity.getCoverages().stream()
+                            .map(this::toCoverageResponse)
+                            .collect(Collectors.toList())
+            );
+        }
+
         return dto;
     }
 
@@ -45,5 +56,15 @@ public class ProductMapper {
         entity.setProductCode(requestDto.getProductCode());
         entity.setName(requestDto.getName());
         entity.setDescription(requestDto.getDescription());
+    }
+
+    private ProductCoverageResponseDto toCoverageResponse(ProductCoverageEntity coverageEntity) {
+        ProductCoverageResponseDto dto = new ProductCoverageResponseDto();
+        dto.setId(coverageEntity.getId());
+        dto.setCoverageCode(coverageEntity.getCoverageCode());
+        dto.setName(coverageEntity.getName());
+        dto.setMinAmount(coverageEntity.getMinAmount());
+        dto.setMaxAmount(coverageEntity.getMaxAmount());
+        return dto;
     }
 }
