@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ public class ProductResponseDto {
     private String name;
     private String description;
     private Boolean isActive;
+    private BigDecimal amount;
     private Set<CategoryResponseDto> categories;
     private List<ProductCoverageResponseDto> coverages;
 }

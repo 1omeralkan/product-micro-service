@@ -15,6 +15,5 @@ public class ProductCoverageResponseDto {
     private Long id;
     private String coverageCode;
     private String name;
-    private BigDecimal minAmount;
-    private BigDecimal maxAmount;
+
 }
