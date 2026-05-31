@@ -1,13 +1,10 @@
 package com.omeralkan.product.entity;
-import com.omeralkan.product.entity.BaseEntity;
-import com.omeralkan.product.entity.ProductEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "product_coverages", uniqueConstraints = {
