@@ -26,5 +26,9 @@ public class ProductCoverageEntity extends BaseEntity {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @Column(name = "min_amount", precision = 15, scale = 2)
+    private java.math.BigDecimal minAmount;
 
+    @Column(name = "max_amount", precision = 15, scale = 2)
+    private java.math.BigDecimal maxAmount;
 }

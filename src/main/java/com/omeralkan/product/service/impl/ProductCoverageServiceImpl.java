@@ -23,7 +23,7 @@ public class ProductCoverageServiceImpl implements ProductCoverageService {
     @Transactional(readOnly = true)
     public List<ProductCoverageRequestDto> getCoveragesByProductId(Long productId) {
         return productCoverageRepository.findByProductId(productId).stream()
-                .map(c -> new ProductCoverageRequestDto(productId, c.getCoverageCode(), c.getName()))
+                .map(c -> new ProductCoverageRequestDto(productId, c.getCoverageCode(), c.getName(), c.getMinAmount(), c.getMaxAmount()))
                 .toList();
     }
 
@@ -37,6 +37,8 @@ public class ProductCoverageServiceImpl implements ProductCoverageService {
         coverage.setProduct(product);
         coverage.setCoverageCode(request.getCoverageCode());
         coverage.setName(request.getName());
+        coverage.setMinAmount(request.getMinAmount());
+        coverage.setMaxAmount(request.getMaxAmount());
         coverage.setIsActive(true);
 
         productCoverageRepository.save(coverage);
@@ -50,6 +52,8 @@ public class ProductCoverageServiceImpl implements ProductCoverageService {
 
         coverage.setCoverageCode(request.getCoverageCode());
         coverage.setName(request.getName());
+        coverage.setMinAmount(request.getMinAmount());
+        coverage.setMaxAmount(request.getMaxAmount());
         // product_id'yi değiştirmek riskli olabilir, o yüzden sadece kod ve isim güncelliyoruz
 
         productCoverageRepository.save(coverage);

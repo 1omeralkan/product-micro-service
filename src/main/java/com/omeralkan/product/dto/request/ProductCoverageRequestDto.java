@@ -11,4 +11,6 @@ public class ProductCoverageRequestDto {
     private Long productId;
     private String coverageCode;
     private String name;
+    private java.math.BigDecimal minAmount;
+    private java.math.BigDecimal maxAmount;
 }

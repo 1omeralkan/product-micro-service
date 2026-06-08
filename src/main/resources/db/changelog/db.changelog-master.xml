@@ -9,4 +9,5 @@
     <include file="db/changelog/002-create-product-amounts-table.xml"/>
     <include file="db/changelog/003-create-error-messages-table.xml"/>
     <include file="db/changelog/004-create-product-coverages.xml"/>
+    <include file="db/changelog/005-add-amount-columns-to-product-coverages.xml"/>
 </databaseChangeLog>

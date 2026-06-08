@@ -69,6 +69,8 @@ public class ProductMapper {
         dto.setId(coverageEntity.getId());
         dto.setCoverageCode(coverageEntity.getCoverageCode());
         dto.setName(coverageEntity.getName());
+        dto.setMinAmount(coverageEntity.getMinAmount());
+        dto.setMaxAmount(coverageEntity.getMaxAmount());
         return dto;
     }
 
